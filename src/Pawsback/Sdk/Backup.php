@@ -35,15 +35,7 @@ class Backup extends Pawsback {
         $provider = $this->getProvider($config, 'S3');
         $provider = $this->prepareProvider($provider);
         $client = $this->getS3Client($provider);
-
-        if (!$client->doesBucketExist($provider['bucket'])) {
-            try {
-                $client->createBucket(['Bucket' => $provider['bucket']]);
-            } catch (AwsException $e) {
-                return $e->getMessage();
-            }
-        }
-
+        $this->checkAndCreateBucket($client, $provider);
         $backups = $this->getAndVerifyBackupPaths($config['backups']);
 
         $options = $this->debug ? ['debug' => true] : [];

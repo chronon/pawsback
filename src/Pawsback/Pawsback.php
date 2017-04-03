@@ -133,6 +133,24 @@ class Pawsback {
     }
 
     /**
+     * checkAndCreateBucket
+     *
+     * @param \Aws\S3\Client $client The client
+     * @param array $provider The provider
+     * @return mixed
+     */
+    protected function checkAndCreateBucket(\Aws\S3\S3Client $client, $provider)
+    {
+        if (!$client->doesBucketExist($provider['bucket'])) {
+            try {
+                $client->createBucket(['Bucket' => $provider['bucket']]);
+            } catch (AwsException $e) {
+                throw new \DomainException($e->getMessage());
+            }
+        }
+    }
+
+    /**
      * prepareProvider
      *
      * @param array $provider The provider
