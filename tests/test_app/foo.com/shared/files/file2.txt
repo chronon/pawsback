@@ -1,0 +1,1 @@
+/foo.com/shared/files/file2.txt

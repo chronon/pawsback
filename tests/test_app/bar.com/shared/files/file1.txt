@@ -1,0 +1,1 @@
+/bar.com/shared/files/file1.txt

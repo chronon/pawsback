@@ -1,0 +1,1 @@
+/foo.com/shared/img/img1.txt

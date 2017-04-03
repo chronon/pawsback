@@ -1,0 +1,24 @@
+{
+    "name": "chronon/pawsback",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gregory Gaskill",
+            "email": "gregory@chronon.com"
+        }
+    ],
+    "require": {
+        "aws/aws-sdk-php": "^3.25"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    },
+    "autoload": {
+        "psr-4": { "Pawsback\\": "src/Pawsback" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Pawsback\\": "tests/Pawsback" }
+    },
+    "bin": ["bin/pawsback"]
+}

@@ -1,0 +1,31 @@
+{
+    "provider": {
+        "S3": {
+            "bucket": "chronon-pawsback-test-1",
+            "profile": "default",
+            "credentials": {
+                "key": "",
+                "secret": ""
+            }
+        }
+    },
+    "backups": {
+        "sources": [
+            {
+                "name": "foo.com",
+                "root": "/home/chronon/repos/pawsback/tests/test_app/foo.com/",
+                "dirs": [
+                    "shared/img",
+                    "shared/files"
+                ]
+            },
+            {
+                "name": "bar.com",
+                "root": "/home/chronon/repos/pawsback/tests/test_app/bar.com/",
+                "dirs": [
+                    "shared/files"
+                ]
+            }
+        ]
+    }
+}

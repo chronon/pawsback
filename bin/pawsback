@@ -1,0 +1,38 @@
+#!/usr/bin/env php
+<?php
+require __DIR__.'/../src/bootstrap.php';
+
+$options = getopt("p:hvds");
+if (isset($options['h'])) {
+    echo 'pawsback help' . PHP_EOL . PHP_EOL;
+    echo '  -p    The full path to the backup config file' . PHP_EOL;
+    echo '  -v    Verbose output, can be used with debug' . PHP_EOL;
+    echo '  -d    Sdk: debug output, Cli: dry run' . PHP_EOL;
+    echo '  -s    Use the AWS SDK instead of CLI.' . PHP_EOL;
+    echo '  -h    This help message' . PHP_EOL . PHP_EOL;
+    exit(0);
+}
+
+if (empty($options['p'])) {
+    echo 'Error: missing required `-p path` arguement.' . PHP_EOL;
+    exit(1);
+}
+
+$path = $options['p'];
+$verbose = isset($options['v']) ? true : false;
+$debug = isset($options['d']) ? true : false;
+$sdk = isset($options['s']) ? true : false;
+
+try {
+    if ($sdk) {
+        $backup = new \Pawsback\Sdk\Backup($path, $verbose, $debug);
+    } else {
+        $backup = new \Pawsback\Cli\Backup($path, $verbose, $debug);
+    }
+    $result = $backup->run();
+} catch (Exception $e) {
+    echo $e->getMessage() . PHP_EOL;
+    exit(1);
+}
+
+print_r($result);

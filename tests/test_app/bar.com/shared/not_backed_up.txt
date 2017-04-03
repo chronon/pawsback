@@ -1,0 +1,1 @@
+/bar.com/shared/not_backed_up.txt
