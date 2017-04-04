@@ -21,14 +21,10 @@ if (empty($options['p'])) {
 $path = $options['p'];
 $verbose = isset($options['v']) ? true : false;
 $debug = isset($options['d']) ? true : false;
-$sdk = isset($options['s']) ? true : false;
+$backupClass = isset($options['s']) ? '\Pawsback\Sdk\Backup' : '\Pawsback\Cli\Backup';
 
 try {
-    if ($sdk) {
-        $backup = new \Pawsback\Sdk\Backup($path, $verbose, $debug);
-    } else {
-        $backup = new \Pawsback\Cli\Backup($path, $verbose, $debug);
-    }
+    $backup = new $backupClass($path, $verbose, $debug);
     $result = $backup->run();
 } catch (Exception $e) {
     echo $e->getMessage() . PHP_EOL;

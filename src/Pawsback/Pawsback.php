@@ -1,6 +1,7 @@
 <?php
 namespace Pawsback;
 
+use Aws\Exception\AwsException;
 use Aws\S3\S3Client;
 
 /**
@@ -49,6 +50,27 @@ class Pawsback {
     protected $debug;
 
     /**
+     * config
+     *
+     * @var mixed
+     */
+    protected $config;
+
+    /**
+     * provider
+     *
+     * @var mixed
+     */
+    protected $provider;
+
+    /**
+     * client
+     *
+     * @var mixed
+     */
+    protected $client;
+
+    /**
      * __construct
      *
      * @param mixed $path The path to the config file
@@ -63,9 +85,16 @@ class Pawsback {
         }
 
         $this->validatePath($path);
+
         $this->path = $path;
         $this->verbose = $verbose;
         $this->debug = $debug;
+
+        $this->config = $this->getConfig();
+        $this->provider = $this->prepareProvider($this->getProvider($this->config, 'S3'));
+        $this->client = $this->getS3Client($this->provider);
+        $this->checkAndCreateBucket($this->client, $this->provider);
+        $this->backups = $this->getAndVerifyBackupPaths($this->config['backups']);
     }
 
     /**
@@ -75,7 +104,7 @@ class Pawsback {
      * @return bool true if the path exists
      * @throws InvalidArgumentException
      */
-    public function validatePath($path)
+    protected function validatePath($path)
     {
         $fileInfo = $this->newSplFileInfo($path);
         if (!$fileInfo->isReadable()) {
@@ -90,7 +119,7 @@ class Pawsback {
      *
      * @return array An array of the json configuration
      */
-    public function getConfig()
+    protected function getConfig()
     {
         $fileObject = $this->newSplFileObject($this->path, 'r');
 

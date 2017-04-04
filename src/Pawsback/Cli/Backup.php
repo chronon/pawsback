@@ -10,18 +10,18 @@ use Pawsback\Pawsback;
 class Backup extends Pawsback {
 
     /**
-     * cmd
+     * cliSyncCmd
      *
      * @var string
      */
-    protected $syncCmd = 'aws s3 sync';
+    protected $cliSyncCmd = 'aws s3 sync';
 
     /**
-     * dryRunCmd
+     * cliDryRunCmd
      *
      * @var string
      */
-    protected $dryRunCmd = '--dryrun';
+    protected $cliDryRunCmd = '--dryrun';
 
     /**
      * __construct
@@ -43,22 +43,15 @@ class Backup extends Pawsback {
      */
     public function run()
     {
-        $config = $this->getConfig();
-        $provider = $this->getProvider($config, 'S3');
-        $provider = $this->prepareProvider($provider);
-        $client = $this->getS3Client($provider);
-        $this->checkAndCreateBucket($client, $provider);
-        $backups = $this->getAndVerifyBackupPaths($config['backups']);
-
-        foreach ($backups as $name => $backup) {
+        foreach ($this->backups as $name => $backup) {
             foreach ($backup as $key => $source) {
-                $dest = 's3://' . $provider['bucket'] . '/' . $name . '/' . $key;
+                $dest = 's3://' . $this->provider['bucket'] . '/' . $name . '/' . $key;
 
-                $cmd = $this->syncCmd . ' ' . $source . ' ' . $dest;
-                $cmd .= ' --region ' . $provider['region'];
-                $cmd .= ' --profile ' . $provider['profile'];
+                $cmd = $this->cliSyncCmd . ' ' . $source . ' ' . $dest;
+                $cmd .= ' --region ' . $this->provider['region'];
+                $cmd .= ' --profile ' . $this->provider['profile'];
                 if ($this->debug) {
-                    $cmd .= ' ' . $this->dryRunCmd;
+                    $cmd .= ' ' . $this->cliDryRunCmd;
                 }
 
                 if ($this->verbose) {

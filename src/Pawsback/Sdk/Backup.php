@@ -1,7 +1,6 @@
 <?php
 namespace Pawsback\Sdk;
 
-use Aws\Exception\AwsException;
 use Aws\S3\Transfer;
 use Pawsback\Pawsback;
 
@@ -31,23 +30,16 @@ class Backup extends Pawsback {
      */
     public function run()
     {
-        $config = $this->getConfig();
-        $provider = $this->getProvider($config, 'S3');
-        $provider = $this->prepareProvider($provider);
-        $client = $this->getS3Client($provider);
-        $this->checkAndCreateBucket($client, $provider);
-        $backups = $this->getAndVerifyBackupPaths($config['backups']);
-
         $options = $this->debug ? ['debug' => true] : [];
-        foreach ($backups as $name => $backup) {
+        foreach ($this->backups as $name => $backup) {
             foreach ($backup as $key => $source) {
-                $dest = 's3://' . $provider['bucket'] . '/' . $name . '/' . $key;
+                $dest = 's3://' . $this->provider['bucket'] . '/' . $name . '/' . $key;
 
                 if ($this->verbose) {
                     print_r(PHP_EOL . "Source: $source" . PHP_EOL . "Dest: $dest" . PHP_EOL);
                 }
 
-                $transfer = $this->getTransfer($client, $source, $dest, $options);
+                $transfer = $this->getTransfer($this->client, $source, $dest, $options);
                 $transfer->promise()->wait();
             }
         }
@@ -70,6 +62,6 @@ class Backup extends Pawsback {
      */
     protected function getTransfer(\Aws\S3\S3Client $client, $source, $dest, array $options = [])
     {
-        return new Transfer($client, $source, $dest, $options);
+        return new Transfer($this->client, $source, $dest, $options);
     }
 }
