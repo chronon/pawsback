@@ -1,13 +1,7 @@
 {
     "provider": {
         "S3": {
-            "bucket": "chronon-pawsback-test-1",
-            "profile": "default",
-            "options": "",
-            "credentials": {
-                "key": "",
-                "secret": ""
-            }
+            "bucket": "chronon-pawsback-test-1"
         }
     },
     "backups": {
