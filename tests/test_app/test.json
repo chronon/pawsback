@@ -3,6 +3,7 @@
         "S3": {
             "bucket": "chronon-pawsback-test-1",
             "profile": "default",
+            "options": "",
             "credentials": {
                 "key": "",
                 "secret": ""
@@ -14,17 +15,18 @@
             {
                 "name": "foo.com",
                 "root": "/home/chronon/repos/pawsback/tests/test_app/foo.com/",
-                "dirs": [
-                    "shared/img",
-                    "shared/files"
-                ]
+                "dirs": {
+                    "shared/img": "",
+                    "shared/files": ""
+                }
             },
             {
                 "name": "bar.com",
                 "root": "/home/chronon/repos/pawsback/tests/test_app/bar.com/",
-                "dirs": [
-                    "shared/files"
-                ]
+                "dirs": {
+                    "shared/files": "",
+                    "prefixed": "--exclude '*' --include 'baz_*'"
+                }
             }
         ]
     }

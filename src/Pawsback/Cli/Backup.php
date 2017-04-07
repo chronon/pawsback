@@ -47,15 +47,16 @@ class Backup extends Pawsback {
             foreach ($backup as $key => $source) {
                 $dest = 's3://' . $this->provider['bucket'] . '/' . $name . '/' . $key;
 
-                $cmd = $this->cliSyncCmd . ' ' . $source . ' ' . $dest;
+                $cmd = $this->cliSyncCmd . ' ' . $source['path'] . ' ' . $dest;
                 $cmd .= ' --region ' . $this->provider['region'];
                 $cmd .= ' --profile ' . $this->provider['profile'];
-                if ($this->debug) {
-                    $cmd .= ' ' . $this->cliDryRunCmd;
-                }
+                $cmd .= $this->provider['delete'] ? ' --delete' : '';
+                $cmd .= $this->provider['options'] ? ' ' . $this->provider['options'] : '';
+                $cmd .= $source['option'] ? ' ' . $source['option'] : '';
+                $cmd .= $this->debug ? ' ' . $this->cliDryRunCmd : '';
 
                 if ($this->verbose) {
-                    $this->output .= "Source: $source" . PHP_EOL . "Dest: $dest" . PHP_EOL;
+                    $this->output .= 'Source: ' . $source['path'] . PHP_EOL . "Dest: $dest" . PHP_EOL;
                     $this->output .= 'Command: ' . $cmd . PHP_EOL;
                 }
 

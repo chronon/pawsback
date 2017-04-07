@@ -19,6 +19,8 @@ class Pawsback {
         'version' => 'latest',
         'region' => 'us-east-1',
         'profile' => 'default',
+        'delete' => true,
+        'options' => null,
     ];
 
     /**
@@ -69,6 +71,13 @@ class Pawsback {
      * @var mixed
      */
     protected $client;
+
+    /**
+     * backups
+     *
+     * @var mixed
+     */
+    protected $backups;
 
     /**
      * __construct
@@ -148,10 +157,11 @@ class Pawsback {
     {
         $paths = [];
         foreach ($backups['sources'] as $source) {
-            foreach ($source['dirs'] as $dir) {
+            foreach ($source['dirs'] as $dir => $option) {
                 $path = $source['root'] . $dir;
                 if ($this->verifyPath($path)) {
-                    $paths[$source['name']][$dir] = $path;
+                    $paths[$source['name']][$dir]['path'] = $path;
+                    $paths[$source['name']][$dir]['option'] = $option;
                 } else {
                     throw new \DomainException('Invalid path: ' . $path);
                 }
@@ -209,7 +219,8 @@ class Pawsback {
      * @param array $provider The provider
      * @return object An instance of S3Client
      */
-    protected function getS3Client(array $provider) {
+    protected function getS3Client(array $provider)
+    {
         return new S3Client($provider);
     }
 
