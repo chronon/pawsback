@@ -218,6 +218,7 @@ class Pawsback {
      *
      * @param array $provider The provider
      * @return object An instance of S3Client
+     * @codeCoverageIgnore Don't test PHP's ability to use `new`
      */
     protected function getS3Client(array $provider)
     {

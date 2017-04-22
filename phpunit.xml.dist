@@ -3,4 +3,13 @@
     colors="true"
     bootstrap="./tests/bootstrap.php"
     >
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src/</directory>
+            <exclude>
+                <directory suffix=".php">./src/Pawsback/Sdk</directory>
+                <file>./src/bootstrap.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
 </phpunit>

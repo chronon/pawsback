@@ -61,7 +61,7 @@ class Backup extends Pawsback {
                 }
 
                 $action = false;
-                $result = shell_exec($cmd);
+                $result = $this->shellExec($cmd);
                 if ($result != '') {
                     $this->output .= $result . PHP_EOL;
                     $action = true;
@@ -74,5 +74,16 @@ class Backup extends Pawsback {
         }
 
         return $this->output;
+    }
+
+    /**
+     * shellExec
+     *
+     * @param string $cmd The command to run
+     * @return bool
+     */
+    protected function shellExec($cmd)
+    {
+        return shell_exec($cmd);
     }
 }
