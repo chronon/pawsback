@@ -10,4 +10,5 @@ dependencies:
 
 test:
   override:
-    - vendor/bin/phpunit tests
+    - vendor/bin/phpcs --colors --extensions=php --standard=PSR2 src/ bin/
+    - vendor/bin/phpunit tests/
