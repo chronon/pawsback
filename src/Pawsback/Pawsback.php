@@ -188,6 +188,8 @@ class Pawsback
                 throw new \DomainException($e->getMessage());
             }
         }
+
+        return true;
     }
 
     /**
@@ -219,7 +221,6 @@ class Pawsback
      *
      * @param array $provider The provider
      * @return object An instance of S3Client
-     * @codeCoverageIgnore Don't test PHP's ability to use `new`
      */
     protected function getS3Client(array $provider)
     {
@@ -231,7 +232,6 @@ class Pawsback
      *
      * @param mixed $path The path
      * @return void
-     * @codeCoverageIgnore Don't test PHP's ability to use `new`
      */
     protected function newSplFileInfo($path)
     {
@@ -244,7 +244,6 @@ class Pawsback
      * @param mixed $path The path
      * @param mixed $mode The mode
      * @return void
-     * @codeCoverageIgnore Don't test PHP's ability to use `new`
      */
     protected function newSplFileObject($path, $mode)
     {

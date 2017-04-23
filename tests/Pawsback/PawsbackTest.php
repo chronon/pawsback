@@ -249,4 +249,285 @@ class PawsBackTest extends TestCase
             ],
         ];
     }
+
+    /**
+     * testGetAndVerifyBackupPaths
+     *
+     * @return void
+     */
+    public function testGetAndVerifyBackupPathsInvalidPath()
+    {
+        $backups = ['sources' => [
+            [
+                'name' => 'foo',
+                'root' => '/bar/baz/',
+                'dirs' => [
+                    'one' => '',
+                    'two' => '',
+                ],
+            ],
+        ]];
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods(['verifyPath'])
+            ->getMock();
+
+        $pawsback->expects($this->once())
+            ->method('verifyPath')
+            ->will($this->returnValue(false));
+
+        $this->expectException('DomainException');
+        $pawsback->getAndVerifyBackupPaths($backups);
+    }
+
+    /**
+     * testGetAndVerifyBackupPathsValidPath
+     *
+     * @return void
+     */
+    public function testGetAndVerifyBackupPathsValidPath()
+    {
+        $backups = ['sources' => [
+            [
+                'name' => 'foo',
+                'root' => '/bar/baz/',
+                'dirs' => [
+                    'one' => '',
+                    'two' => '--special-power zoom',
+                ],
+            ],
+            [
+                'name' => 'bar',
+                'root' => '/ding/dong/',
+                'dirs' => [
+                    'img' => '',
+                ],
+            ],
+        ]];
+        $expected = [
+            'foo' => [
+                'one' => [
+                    'path' => '/bar/baz/one',
+                    'option' => '',
+                ],
+                'two' => [
+                    'path' => '/bar/baz/two',
+                    'option' => '--special-power zoom',
+                ],
+            ],
+            'bar' => [
+                'img' => [
+                    'path' => '/ding/dong/img',
+                    'option' => '',
+                ],
+            ],
+        ];
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods(['verifyPath'])
+            ->getMock();
+
+        $pawsback->expects($this->any())
+            ->method('verifyPath')
+            ->will($this->returnValue(true));
+
+        $result = $pawsback->getAndVerifyBackupPaths($backups);
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * testCheckAndCreateBucketBucketExists
+     *
+     * @return void
+     */
+    public function testCheckAndCreateBucketBucketExists()
+    {
+        $provider = ['bucket' => 'foo'];
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $S3Client = $this->getMockBuilder('Aws\S3\S3Client')
+            ->disableOriginalConstructor()
+            ->setMethods(['doesBucketExist', 'createBucket'])
+            ->getMock();
+
+        $S3Client->expects($this->once())
+            ->method('doesBucketExist')
+            ->will($this->returnValue(true));
+
+        $result = $pawsback->checkAndCreateBucket($S3Client, $provider);
+        $this->assertTrue($result);
+    }
+
+    /**
+     * testCheckAndCreateBucketCreateBucketSuccess
+     *
+     * @return void
+     */
+    public function testCheckAndCreateBucketCreateBucketSuccess()
+    {
+        $provider = ['bucket' => 'foo'];
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $S3Client = $this->getMockBuilder('Aws\S3\S3Client')
+            ->disableOriginalConstructor()
+            ->setMethods(['doesBucketExist', 'createBucket'])
+            ->getMock();
+
+        $S3Client->expects($this->once())
+            ->method('doesBucketExist')
+            ->will($this->returnValue(false));
+        $S3Client->expects($this->once())
+            ->method('createBucket')
+            ->will($this->returnValue(true));
+
+        $result = $pawsback->checkAndCreateBucket($S3Client, $provider);
+        $this->assertTrue($result);
+    }
+
+    /**
+     * testCheckAndCreateBucketCreateBucketFails
+     *
+     * @return void
+     */
+    public function testCheckAndCreateBucketCreateBucketFails()
+    {
+        $provider = ['bucket' => 'foo'];
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $S3Client = $this->getMockBuilder('Aws\S3\S3Client')
+            ->disableOriginalConstructor()
+            ->setMethods(['doesBucketExist', 'createBucket'])
+            ->getMock();
+        $AwsException = $this->getMockBuilder('Aws\Exception\AwsException')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $AwsCommandInterface = $this->getMockBuilder('Aws\CommandInterface')
+            ->getMock();
+
+        $S3Client->expects($this->once())
+            ->method('doesBucketExist')
+            ->will($this->returnValue(false));
+        $S3Client->expects($this->once())
+            ->method('createBucket')
+            ->will($this->throwException(new $AwsException(new \Exception, $AwsCommandInterface)));
+
+        $this->expectException('DomainException');
+        $result = $pawsback->checkAndCreateBucket($S3Client, $provider);
+    }
+
+    /**
+     * testPrepareProvider
+     *
+     * @return void
+     */
+    public function testPrepareProvider()
+    {
+        $provider = [
+            'region' => 'us-west-1',
+            'delete' => false,
+        ];
+        $expected = [
+            'version' => 'latest',
+            'region' => 'us-west-1',
+            'profile' => 'default',
+            'delete' => false,
+            'options' => null,
+        ];
+
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $result = $pawsback->prepareProvider($provider);
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * testVerifyPath
+     *
+     * @return void
+     */
+    public function testVerifyPath()
+    {
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods(['newSplFileInfo'])
+            ->getMock();
+        $fileObject = $this->getMockBuilder('\SplFileInfo')
+            ->disableOriginalConstructor()
+            ->setMethods(['isDir'])
+            ->getMock();
+
+        $pawsback->expects($this->once())
+            ->method('newSplFileInfo')
+            ->will($this->returnValue($fileObject));
+        $fileObject->expects($this->once())
+            ->method('isDir')
+            ->will($this->returnValue(true));
+
+        $pawsback->verifyPath($this->path);
+    }
+
+    /**
+     * testGetS3Client
+     *
+     * @return void
+     */
+    public function testGetS3Client()
+    {
+        $provider = [
+            'region' => 'us-east-1',
+            'version' => 'latest',
+        ];
+
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $result = $pawsback->getS3Client($provider);
+        $this->assertInstanceOf(\Aws\S3\S3Client::class, $result);
+    }
+
+    /**
+     * testNewSplFileInfo
+     *
+     * @return void
+     */
+    public function testNewSplFileInfo()
+    {
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $result = $pawsback->newSplFileInfo($this->path);
+        $this->assertInstanceOf(\SplFileInfo::class, $result);
+    }
+
+    /**
+     * testNewSplFileObject
+     *
+     * @return void
+     */
+    public function testNewSplFileObject()
+    {
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods(null)
+            ->getMock();
+
+        $result = $pawsback->newSplFileObject($this->path . 'test.json', 'r');
+        $this->assertInstanceOf(\SplFileObject::class, $result);
+    }
 }

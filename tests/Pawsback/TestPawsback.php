@@ -10,6 +10,14 @@ use Pawsback\Pawsback;
  */
 class TestPawsback extends Pawsback
 {
+    public $defaults = [
+        'version' => 'latest',
+        'region' => 'us-east-1',
+        'profile' => 'default',
+        'delete' => true,
+        'options' => null,
+    ];
+
     public function validatePath($path)
     {
         return parent::validatePath($path);
@@ -43,5 +51,20 @@ class TestPawsback extends Pawsback
     public function getAndVerifyBackupPaths(array $pawsbacks)
     {
         return parent::getAndVerifyBackupPaths($pawsbacks);
+    }
+
+    public function verifyPath($path)
+    {
+        return parent::verifyPath($path);
+    }
+
+    public function newSplFileInfo($path)
+    {
+        return parent::newSplFileInfo($path);
+    }
+
+    public function newSplFileObject($path, $mode)
+    {
+        return parent::newSplFileObject($path, $mode);
     }
 }
