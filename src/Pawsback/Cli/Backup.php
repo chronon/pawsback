@@ -34,6 +34,7 @@ class Backup extends Pawsback
      */
     public function __construct($path = null, $verbose = false, $debug = false)
     {
+        $this->cliExists();
         parent::__construct($path, $verbose, $debug);
     }
 
@@ -86,5 +87,21 @@ class Backup extends Pawsback
     protected function shellExec($cmd)
     {
         return shell_exec($cmd);
+    }
+
+    /**
+     * cliExists
+     *
+     * @return void
+     */
+    protected function cliExists()
+    {
+        exec('command -v aws >/dev/null 2>&1 || { exit 1; }', $out, $return);
+
+        if ($return == 1) {
+            throw new \RuntimeException('The `aws` CLI command cannot be found.');
+        }
+
+        return true;
     }
 }
