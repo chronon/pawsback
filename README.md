@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/chronon/pawsback.svg?style=shield&circle-token=133a5b115b9c8fc8a5c454c1e051a60a0af7bf8c)](https://circleci.com/gh/chronon/pawsback)
+
 ## pawsback
 
 * `p` as in PHP
