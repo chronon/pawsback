@@ -1,49 +1,8 @@
 <?php
+namespace Pawsback\Test\Pawsback;
+
 use PHPUnit\Framework\TestCase;
 use Pawsback\Pawsback;
-
-/**
- * Class: PawsbackTestClass
- *
- * @see Pawsback
- */
-class PawsbackTestClass extends Pawsback
-{
-    public function validatePath($path)
-    {
-        return parent::validatePath($path);
-    }
-
-    public function getConfig()
-    {
-        return parent::getConfig();
-    }
-
-    public function getProvider(array $config, $provider)
-    {
-        return parent::getProvider($config, $provider);
-    }
-
-    public function prepareProvider(array $provider)
-    {
-        return parent::prepareProvider($provider);
-    }
-
-    public function getS3Client(array $provider)
-    {
-        return parent::getS3Client($provider);
-    }
-
-    public function checkAndCreateBucket(\Aws\S3\S3Client $client, $provider)
-    {
-        return parent::checkAndCreateBucket($client, $provider);
-    }
-
-    public function getAndVerifyBackupPaths(array $pawsbacks)
-    {
-        return parent::getAndVerifyBackupPaths($pawsbacks);
-    }
-}
 
 /**
  * Class: PawsbackTest
@@ -102,7 +61,7 @@ class PawsBackTest extends TestCase
         $path = 'foo';
         $config = ['backups' => ['foo' => 'bar']];
         $provider = ['provider'];
-        $pawsback = $this->getMockBuilder('PawsbackTestClass')
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
             ->disableOriginalConstructor()
             ->setMethods([
                 'validatePath',
@@ -158,7 +117,7 @@ class PawsBackTest extends TestCase
     public function testValidatePathValid()
     {
         $path = 'canary';
-        $pawsback = $this->getMockBuilder('PawsbackTestClass')
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
             ->disableOriginalConstructor()
             ->setMethods(['newSplFileInfo'])
             ->getMock();
@@ -191,7 +150,7 @@ class PawsBackTest extends TestCase
     public function testValidatePathInvalid()
     {
         $path = 'canary';
-        $pawsback = $this->getMockBuilder('PawsbackTestClass')
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
             ->disableOriginalConstructor()
             ->setMethods(['newSplFileInfo'])
             ->getMock();
@@ -223,7 +182,7 @@ class PawsBackTest extends TestCase
     {
         $file = './tests/test_app/test.json';
         $config = '{"foo": "bar"}';
-        $pawsback = $this->getMockBuilder('PawsbackTestClass')
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
             ->disableOriginalConstructor()
             ->setMethods(['newSplFileObject'])
             ->getMock();
@@ -256,7 +215,7 @@ class PawsBackTest extends TestCase
      */
     public function testGetProvider($config, $provider, $expected)
     {
-        $pawsback = $this->getMockBuilder('PawsbackTestClass')
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
             ->disableOriginalConstructor()
             ->setMethods(null)
             ->getMock();
