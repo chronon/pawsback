@@ -10,6 +10,6 @@ dependencies:
 
 test:
   override:
-    - vendor/bin/phpcs --colors --extensions=php --standard=PSR2 --ignore=src/bootstrap.php src/ bin/
+    - bin/run-phpcs
     - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
     - vendor/bin/phpunit -v --log-junit $CIRCLE_TEST_REPORTS/phpunit/junit.xml tests

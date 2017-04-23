@@ -1,0 +1,4 @@
+#!/bin/sh
+
+vendor/bin/phpcs --colors --extensions=php --standard=PSR2 --ignore=src/bootstrap.php src/ bin/ tests/
+vendor/bin/phpcs --colors --standard=PSR2 bin/pawsback
