@@ -8,7 +8,8 @@ use Aws\S3\S3Client;
  * Class: Pawsback
  *
  */
-class Pawsback {
+class Pawsback
+{
 
     /**
      * defaults

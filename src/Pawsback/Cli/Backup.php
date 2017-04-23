@@ -7,7 +7,8 @@ use Pawsback\Pawsback;
  * Class: Backup
  *
  */
-class Backup extends Pawsback {
+class Backup extends Pawsback
+{
 
     /**
      * cliSyncCmd
