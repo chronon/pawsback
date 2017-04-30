@@ -8,7 +8,7 @@
         "sources": [
             {
                 "name": "foo.com",
-                "root": "/home/chronon/repos/pawsback/tests/test_app/foo.com/",
+                "root": "/home/ubuntu/pawsback/tests/test_app/foo.com/",
                 "dirs": {
                     "shared/img": "",
                     "shared/files": ""
@@ -16,7 +16,7 @@
             },
             {
                 "name": "bar.com",
-                "root": "/home/chronon/repos/pawsback/tests/test_app/bar.com/",
+                "root": "/home/ubuntu/pawsback/tests/test_app/bar.com/",
                 "dirs": {
                     "shared/files": "",
                     "prefixed": "--exclude '*' --include 'baz_*'"

@@ -15,14 +15,14 @@ class Backup extends Pawsback
      *
      * @var string
      */
-    protected $cliSyncCmd = 'aws s3 sync';
+    public $cliSyncCmd = 'aws s3 sync';
 
     /**
      * cliDryRunCmd
      *
      * @var string
      */
-    protected $cliDryRunCmd = '--dryrun';
+    public $cliDryRunCmd = '--dryrun';
 
     /**
      * __construct
@@ -83,6 +83,7 @@ class Backup extends Pawsback
      *
      * @param string $cmd The command to run
      * @return bool
+     * @codeCoverageIgnore Don't need to test PHP functions
      */
     protected function shellExec($cmd)
     {
@@ -96,12 +97,22 @@ class Backup extends Pawsback
      */
     protected function cliExists()
     {
-        exec('command -v aws >/dev/null 2>&1 || { exit 1; }', $out, $return);
-
-        if ($return == 1) {
+        if ($this->checkForCli() == 1) {
             throw new \RuntimeException('The `aws` CLI command cannot be found.');
         }
 
         return true;
+    }
+
+    /**
+     * checkForCli
+     *
+     * @return void
+     * @codeCoverageIgnore Don't need to test PHP functions
+     */
+    protected function checkForCli()
+    {
+        exec('command -v aws >/dev/null 2>&1 || { exit 1; }', $out, $return);
+        return $return;
     }
 }

@@ -25,13 +25,6 @@ class Pawsback
     ];
 
     /**
-     * output
-     *
-     * @var string
-     */
-    protected $output = '';
-
-    /**
      * path
      *
      * @var string
@@ -60,13 +53,6 @@ class Pawsback
     protected $config;
 
     /**
-     * provider
-     *
-     * @var mixed
-     */
-    protected $provider;
-
-    /**
      * client
      *
      * @var mixed
@@ -74,11 +60,25 @@ class Pawsback
     protected $client;
 
     /**
+     * output
+     *
+     * @var string
+     */
+    public $output = '';
+
+    /**
+     * provider
+     *
+     * @var mixed
+     */
+    public $provider;
+
+    /**
      * backups
      *
      * @var mixed
      */
-    protected $backups;
+    public $backups;
 
     /**
      * __construct
@@ -132,7 +132,6 @@ class Pawsback
     protected function getConfig()
     {
         $fileObject = $this->newSplFileObject($this->path, 'r');
-
         return json_decode($fileObject->fread($fileObject->getSize()), true);
     }
 
@@ -212,7 +211,6 @@ class Pawsback
     protected function verifyPath($path)
     {
         $fileObject = $this->newSplFileInfo($path, 'r');
-
         return $fileObject->isDir();
     }
 
