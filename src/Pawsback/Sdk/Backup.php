@@ -6,17 +6,16 @@ use Pawsback\Pawsback;
 
 /**
  * Class: Backup
- *
  */
 class Backup extends Pawsback
 {
 
     /**
-     * __construct
+     * Constructor
      *
      * @param mixed $path The path to the config file
-     * @param bool $verbose Verbose output
-     * @param bool $debug Debug output
+     * @param bool $verbose Verbose output if true
+     * @param bool $debug Debug output if true
      * @return void
      */
     public function __construct($path = null, $verbose = false, $debug = false)
@@ -25,9 +24,9 @@ class Backup extends Pawsback
     }
 
     /**
-     * run
+     * Run the backup job
      *
-     * @return void
+     * @return string The resulting output
      */
     public function run()
     {
@@ -53,7 +52,7 @@ class Backup extends Pawsback
     }
 
     /**
-     * getTransfer
+     * Gets an instance of the Transfer class
      *
      * @param \Aws\S3\S3Client $client an S3Client instance
      * @param string $source The source directory

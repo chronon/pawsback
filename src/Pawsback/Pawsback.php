@@ -6,13 +6,12 @@ use Aws\S3\S3Client;
 
 /**
  * Class: Pawsback
- *
  */
 class Pawsback
 {
 
     /**
-     * defaults
+     * S3 defaults that can be overridden in the config file
      *
      * @var array
      */
@@ -34,23 +33,23 @@ class Pawsback
     /**
      * verbose
      *
-     * @var mixed
+     * @var bool
      */
     protected $verbose;
 
     /**
      * debug
      *
-     * @var mixed
+     * @var bool
      */
     protected $debug;
 
     /**
      * config
      *
-     * @var mixed
+     * @var array
      */
-    protected $config;
+    protected $config = [];
 
     /**
      * client
@@ -69,24 +68,25 @@ class Pawsback
     /**
      * provider
      *
-     * @var mixed
+     * @var array
      */
-    public $provider;
+    public $provider = [];
 
     /**
      * backups
      *
-     * @var mixed
+     * @var array
      */
-    public $backups;
+    public $backups = [];
 
     /**
-     * __construct
+     * Constructor
      *
      * @param mixed $path The path to the config file
-     * @param bool $verbose Verbose output
-     * @param bool $debug Debug output
+     * @param bool $verbose Verbose output if true
+     * @param bool $debug Dry run mode or Debug output
      * @return void
+     * @throws InvalidArgumentException If $path is missing
      */
     public function __construct($path = null, $verbose = false, $debug = false)
     {
@@ -108,11 +108,11 @@ class Pawsback
     }
 
     /**
-     * validatePath
+     * Validates the config file exists and is readable
      *
      * @param string $path The path to validate
-     * @return bool true if the path exists
-     * @throws InvalidArgumentException
+     * @return bool True if the path exists
+     * @throws InvalidArgumentException If the config file can't be read
      */
     protected function validatePath($path)
     {
@@ -120,12 +120,11 @@ class Pawsback
         if (!$fileInfo->isReadable()) {
             throw new \InvalidArgumentException('Supplied config file is unreadable.');
         }
-
         return true;
     }
 
     /**
-     * getConfig
+     * Converts the json config file into an array
      *
      * @return array An array of the json configuration
      */
@@ -136,7 +135,7 @@ class Pawsback
     }
 
     /**
-     * getProvider
+     * Extracts the `provider` array from the config array
      *
      * @param array $config The configuration
      * @param string $provider The provider type
@@ -148,10 +147,11 @@ class Pawsback
     }
 
     /**
-     * getAndVerifyBackupPaths
+     * Extracts and verifies the backup paths from the config file
      *
      * @param array $backups The backup array
      * @return array $paths The full paths to use as backup source
+     * @throws DomainException If a backup path is not valid
      */
     protected function getAndVerifyBackupPaths(array $backups)
     {
@@ -167,16 +167,16 @@ class Pawsback
                 }
             }
         }
-
         return $paths;
     }
 
     /**
-     * checkAndCreateBucket
+     * Checks if the bucket exists and creates it if not
      *
-     * @param \Aws\S3\Client $client The client
-     * @param array $provider The provider
+     * @param \Aws\S3\Client $client The S3 client object
+     * @param array $provider The provider configuration
      * @return mixed
+     * @throws DomainException If an AwsException is thrown
      */
     protected function checkAndCreateBucket(\Aws\S3\S3Client $client, $provider)
     {
@@ -187,12 +187,11 @@ class Pawsback
                 throw new \DomainException($e->getMessage());
             }
         }
-
         return true;
     }
 
     /**
-     * prepareProvider
+     * Merges the default provider array with overrides from the config file
      *
      * @param array $provider The provider
      * @return array The provider merged with the defaults
@@ -203,7 +202,7 @@ class Pawsback
     }
 
     /**
-     * verifyPath
+     * Verifies a path exists
      *
      * @param string $path The path to check
      * @return bool True if the path is a directory
@@ -215,9 +214,9 @@ class Pawsback
     }
 
     /**
-     * getS3Client
+     * Gets an instance of S3Client
      *
-     * @param array $provider The provider
+     * @param array $provider The provider configuration
      * @return object An instance of S3Client
      */
     protected function getS3Client(array $provider)
@@ -226,10 +225,10 @@ class Pawsback
     }
 
     /**
-     * newSplFileInfo
+     * Gets an instance of SplFileInfo
      *
-     * @param mixed $path The path
-     * @return void
+     * @param mixed $path The path to something
+     * @return object An instance of SplFileInfo
      */
     protected function newSplFileInfo($path)
     {
@@ -237,11 +236,11 @@ class Pawsback
     }
 
     /**
-     * newSplFileObject
+     * Gets an instance of SplFileObject
      *
-     * @param mixed $path The path
-     * @param mixed $mode The mode
-     * @return void
+     * @param string $path The path to the file
+     * @param string $mode The open mode to use
+     * @return object An instance of SplFileObject
      */
     protected function newSplFileObject($path, $mode)
     {

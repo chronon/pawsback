@@ -5,31 +5,30 @@ use Pawsback\Pawsback;
 
 /**
  * Class: Backup
- *
  */
 class Backup extends Pawsback
 {
 
     /**
-     * cliSyncCmd
+     * The primary `aws` cli sync command
      *
      * @var string
      */
     public $cliSyncCmd = 'aws s3 sync';
 
     /**
-     * cliDryRunCmd
+     * The string to use to enable dry run mode
      *
      * @var string
      */
     public $cliDryRunCmd = '--dryrun';
 
     /**
-     * __construct
+     * Constructor
      *
      * @param mixed $path The path to the config file
-     * @param bool $verbose Verbose output
-     * @param bool $debug Debug output
+     * @param bool $verbose Verbose output if true
+     * @param bool $debug Dry run mode if true
      * @return void
      */
     public function __construct($path = null, $verbose = false, $debug = false)
@@ -39,9 +38,9 @@ class Backup extends Pawsback
     }
 
     /**
-     * run
+     * Assembles aws cli commands and runs them
      *
-     * @return void
+     * @return string The resulting output
      */
     public function run()
     {
@@ -79,10 +78,10 @@ class Backup extends Pawsback
     }
 
     /**
-     * shellExec
+     * Wrapper method for `shell_exec`
      *
      * @param string $cmd The command to run
-     * @return bool
+     * @return bool The result of `shell_exec`
      * @codeCoverageIgnore Don't need to test PHP functions
      */
     protected function shellExec($cmd)
@@ -91,9 +90,10 @@ class Backup extends Pawsback
     }
 
     /**
-     * cliExists
+     * Checks for the existence of the aws cli tool
      *
-     * @return void
+     * @return bool True if the aws cli too exists
+     * @throws RuntimeException If the aws cli tool cannot be found
      */
     protected function cliExists()
     {
@@ -105,9 +105,9 @@ class Backup extends Pawsback
     }
 
     /**
-     * checkForCli
+     * Checks for the existence of the aws cli tool
      *
-     * @return void
+     * @return int The return status of the executed command
      * @codeCoverageIgnore Don't need to test PHP functions
      */
     protected function checkForCli()
