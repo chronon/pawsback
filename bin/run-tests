@@ -1,0 +1,7 @@
+#!/bin/sh
+
+./bin/run-phpcs
+
+./bin/run-phpunit
+
+./bin/coverage-ensure 100
