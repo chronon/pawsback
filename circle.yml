@@ -1,6 +1,6 @@
 machine:
   php:
-    version: 7.0.7
+    version: 7.0.17
 
 dependencies:
   cache_directories:
@@ -13,3 +13,7 @@ test:
     - bin/run-phpcs
     - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
     - vendor/bin/phpunit -v --log-junit $CIRCLE_TEST_REPORTS/phpunit/junit.xml tests
+    - bin/coverage-ensure 100
+  post:
+    - mkdir $CIRCLE_ARTIFACTS/coverage
+    - cp -a tmp/coverage/html/ $CIRCLE_ARTIFACTS/coverage/

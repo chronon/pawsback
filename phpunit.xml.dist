@@ -12,4 +12,18 @@
             </exclude>
         </whitelist>
     </filter>
+    <logging>
+        <log
+            type="coverage-html"
+            target="./tmp/coverage/html/"
+            charset="UTF-8"
+            highlight="true"
+            lowUpperBound="60"
+            highLowerBound="90"
+            />
+        <log
+            type="coverage-clover"
+            target="./tmp/coverage/clover.xml"
+            />
+    </logging>
 </phpunit>
