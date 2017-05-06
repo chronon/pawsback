@@ -2,13 +2,13 @@
 <?php
 require __DIR__.'/../src/bootstrap.php';
 
-$options = getopt("p:hvds");
+$options = getopt("p:hvd");
 if (isset($options['h'])) {
-    echo 'pawsback help: default mode is `Cli`' . PHP_EOL . PHP_EOL;
+    echo 'pawsback help:' . PHP_EOL . PHP_EOL;
     echo '  -p    The full path to the backup config file' . PHP_EOL;
-    echo '  -v    Verbose output, can be used with debug' . PHP_EOL;
-    echo '  -d    `Cli` mode: dry run | `Sdk` mode: debug output' . PHP_EOL;
-    echo '  -s    EXPERIMENTAL: Use `Sdk` mode instead of `Cli` mode' . PHP_EOL;
+    echo '  -v    Verbose output, can be used with dry run' . PHP_EOL;
+    echo '  -d    Dry run, display what would happen without action' . PHP_EOL;
+    // echo '  -s    EXPERIMENTAL: Use `Sdk` mode instead of `Cli` mode' . PHP_EOL;
     echo '  -h    This help message' . PHP_EOL . PHP_EOL;
     exit(0);
 }
