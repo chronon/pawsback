@@ -1,5 +1,6 @@
 {
     "name": "chronon/pawsback",
+    "description": "A PHP backup solution using S3",
     "type": "project",
     "license": "MIT",
     "authors": [
