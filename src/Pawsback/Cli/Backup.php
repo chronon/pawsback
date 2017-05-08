@@ -27,14 +27,13 @@ class Backup extends Pawsback
      * Constructor
      *
      * @param mixed $path The path to the config file
-     * @param bool $verbose Verbose output if true
-     * @param bool $debug Dry run mode if true
+     * @param array $options Optional options
      * @return void
      */
-    public function __construct($path = null, $verbose = false, $debug = false)
+    public function __construct($path = null, array $options = [])
     {
         $this->cliExists();
-        parent::__construct($path, $verbose, $debug);
+        parent::__construct($path, $options);
     }
 
     /**
@@ -54,9 +53,9 @@ class Backup extends Pawsback
                 $cmd .= $this->provider['delete'] ? ' --delete' : '';
                 $cmd .= $this->provider['options'] ? ' ' . $this->provider['options'] : '';
                 $cmd .= $source['option'] ? ' ' . $source['option'] : '';
-                $cmd .= $this->debug ? ' ' . $this->cliDryRunCmd : '';
+                $cmd .= $this->options['debug'] ? ' ' . $this->cliDryRunCmd : '';
 
-                if ($this->verbose) {
+                if ($this->options['verbose']) {
                     $this->output .= 'Source: ' . $source['path'] . PHP_EOL . "Dest: $dest" . PHP_EOL;
                     $this->output .= 'Command: ' . $cmd . PHP_EOL;
                 }

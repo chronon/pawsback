@@ -18,14 +18,16 @@ if (empty($options['p'])) {
 }
 
 $path = $options['p'];
-$verbose = isset($options['v']) ? true : false;
-$debug = isset($options['d']) ? true : false;
+
+$constructorOptions = [];
+$constructorOptions['verbose'] = isset($options['v']) ? true : false;
+$constructorOptions['debug'] = isset($options['d']) ? true : false;
 
 // NOTE: option `s` for `Sdk` mode is not currently enabled.
 $backupClass = isset($options['s']) ? '\Pawsback\Sdk\Backup' : '\Pawsback\Cli\Backup';
 
 try {
-    $backup = new $backupClass($path, $verbose, $debug);
+    $backup = new $backupClass($path, $constructorOptions);
     $result = $backup->run();
 } catch (Exception $e) {
     echo $e->getMessage() . PHP_EOL;

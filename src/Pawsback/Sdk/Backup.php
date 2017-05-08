@@ -14,13 +14,12 @@ class Backup extends Pawsback
      * Constructor
      *
      * @param mixed $path The path to the config file
-     * @param bool $verbose Verbose output if true
-     * @param bool $debug Debug output if true
+     * @param array $options Optional options
      * @return void
      */
-    public function __construct($path = null, $verbose = false, $debug = false)
+    public function __construct($path = null, array $options = [])
     {
-        parent::__construct($path, $verbose, $debug);
+        parent::__construct($path, $options);
     }
 
     /**
@@ -30,21 +29,23 @@ class Backup extends Pawsback
      */
     public function run()
     {
-        $options = $this->debug ? ['debug' => true] : [];
+        $verbose = $this->options['verbose'];
+        unset($this->options['verbose']);
+
         foreach ($this->backups as $name => $backup) {
             foreach ($backup as $key => $source) {
                 $dest = 's3://' . $this->provider['bucket'] . '/' . $name . '/' . $key;
 
-                if ($this->verbose) {
+                if ($verbose) {
                     print_r(PHP_EOL . "Source: $source" . PHP_EOL . "Dest: $dest" . PHP_EOL);
                 }
 
-                $transfer = $this->getTransfer($this->client, $source, $dest, $options);
+                $transfer = $this->getTransfer($this->client, $source, $dest, $this->options);
                 $transfer->promise()->wait();
             }
         }
 
-        if ($this->verbose) {
+        if ($verbose) {
             $this->output .= 'Backup complete' . PHP_EOL;
         }
 
