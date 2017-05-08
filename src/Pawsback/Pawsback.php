@@ -89,6 +89,7 @@ class Pawsback
         $defaults = [
             'verbose' => false,
             'debug' => false,
+            'generate' => false,
         ];
         $options = array_merge($defaults, $options);
 
@@ -100,7 +101,9 @@ class Pawsback
         $this->config = $this->getConfig();
         $this->provider = $this->prepareProvider($this->getProvider($this->config, 'S3'));
         $this->client = $this->getS3Client($this->provider);
-        $this->checkAndCreateBucket($this->client, $this->provider);
+        if (!$options['generate']) {
+            $this->checkAndCreateBucket($this->client, $this->provider);
+        }
         $this->backups = $this->getAndVerifyBackupPaths($this->config['backups']);
     }
 
@@ -156,12 +159,11 @@ class Pawsback
         foreach ($backups['sources'] as $source) {
             foreach ($source['dirs'] as $dir => $option) {
                 $path = $source['root'] . $dir;
-                if ($this->verifyPath($path)) {
-                    $paths[$source['name']][$dir]['path'] = $path;
-                    $paths[$source['name']][$dir]['option'] = $option;
-                } else {
+                if (!$this->options['generate'] && !$this->verifyPath($path)) {
                     throw new \DomainException('Invalid path: ' . $path);
                 }
+                $paths[$source['name']][$dir]['path'] = $path;
+                $paths[$source['name']][$dir]['option'] = $option;
             }
         }
         return $paths;

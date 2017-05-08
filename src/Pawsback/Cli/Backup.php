@@ -60,17 +60,22 @@ class Backup extends Pawsback
                     $this->output .= 'Command: ' . $cmd . PHP_EOL;
                 }
 
-                $action = false;
-                $result = $this->shellExec($cmd);
-                if ($result != '') {
-                    $this->output .= $result . PHP_EOL;
+                if ($this->options['generate']) {
                     $action = true;
+                    $this->output .= $cmd . PHP_EOL;
+                } else {
+                    $action = false;
+                    $result = $this->shellExec($cmd);
+                    if ($result != '') {
+                        $this->output .= $result . PHP_EOL;
+                        $action = true;
+                    }
                 }
             }
         }
 
         if (!$action) {
-            $this->output .= 'No files in need of sync.' . PHP_EOL;
+            $this->output .= PHP_EOL . 'No files in need of sync.' . PHP_EOL;
         }
 
         return $this->output;

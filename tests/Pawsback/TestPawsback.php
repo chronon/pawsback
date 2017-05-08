@@ -18,6 +18,8 @@ class TestPawsback extends Pawsback
         'options' => null,
     ];
 
+    public $options = [];
+
     public function validatePath($path)
     {
         return parent::validatePath($path);

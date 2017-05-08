@@ -109,6 +109,67 @@ class PawsBackTest extends TestCase
         $pawsback->__construct($path);
     }
 
+    public function testConstructorWithPathAndGenerateOption()
+    {
+        $path = 'foo';
+        $config = ['backups' => ['foo' => 'bar']];
+        $options = [
+            'generate' => true,
+        ];
+        $expectedOptions = [
+            'verbose' => false,
+            'debug' => false,
+            'generate' => true,
+        ];
+        $provider = ['provider'];
+        $pawsback = $this->getMockBuilder('\Pawsback\Test\TestPawsback')
+            ->disableOriginalConstructor()
+            ->setMethods([
+                'validatePath',
+                'getConfig',
+                'getProvider',
+                'prepareProvider',
+                'getS3Client',
+                'checkAndCreateBucket',
+                'getAndVerifyBackupPaths',
+            ])
+            ->getMock();
+
+        $S3Client = $this->getMockBuilder('Aws\S3\S3Client')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $pawsback->expects($this->once())
+            ->method('validatePath')
+            ->with($this->identicalTo($path))
+            ->will($this->returnValue(true));
+        $pawsback->expects($this->once())
+            ->method('getConfig')
+            ->will($this->returnValue($config));
+        $pawsback->expects($this->once())
+            ->method('getProvider')
+            ->with($this->identicalTo($config), $this->identicalTo('S3'))
+            ->will($this->returnValue($provider));
+        $pawsback->expects($this->once())
+            ->method('prepareProvider')
+            ->with($this->identicalTo($provider))
+            ->will($this->returnValue($provider));
+        $pawsback->expects($this->once())
+            ->method('getS3Client')
+            ->with($this->identicalTo($provider))
+            ->will($this->returnValue($S3Client));
+        $pawsback->expects($this->never())
+            ->method('checkAndCreateBucket');
+        $pawsback->expects($this->once())
+            ->method('getAndVerifyBackupPaths')
+            ->with($this->identicalTo($config['backups']))
+            ->will($this->returnValue('bucket'));
+
+        $this->assertEmpty($pawsback->options);
+        $pawsback->__construct($path, $options);
+        $this->assertSame($expectedOptions, $pawsback->options);
+    }
+
     /**
      * testValidatePathValid
      *
@@ -271,6 +332,7 @@ class PawsBackTest extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['verifyPath'])
             ->getMock();
+        $pawsback->options = ['generate' => false];
 
         $pawsback->expects($this->once())
             ->method('verifyPath')
@@ -326,6 +388,7 @@ class PawsBackTest extends TestCase
             ->disableOriginalConstructor()
             ->setMethods(['verifyPath'])
             ->getMock();
+        $pawsback->options = ['generate' => false];
 
         $pawsback->expects($this->any())
             ->method('verifyPath')
