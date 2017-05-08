@@ -70,7 +70,7 @@ class BackupTest extends TestCase
         $backup = $this->getMockBuilder('\Pawsback\Cli\Backup')
             ->setConstructorArgs([
                 $this->path . 'test.json',
-                true,
+                ['verbose' => true],
             ])
             ->setMethods(['shellExec', 'checkAndCreateBucket'])
             ->getMock();

@@ -31,18 +31,11 @@ class Pawsback
     protected $path;
 
     /**
-     * verbose
+     * options
      *
-     * @var bool
+     * @var array
      */
-    protected $verbose;
-
-    /**
-     * debug
-     *
-     * @var bool
-     */
-    protected $debug;
+    protected $options = [];
 
     /**
      * config
@@ -83,22 +76,26 @@ class Pawsback
      * Constructor
      *
      * @param mixed $path The path to the config file
-     * @param bool $verbose Verbose output if true
-     * @param bool $debug Dry run mode or Debug output
+     * @param array $options Optional options
      * @return void
      * @throws InvalidArgumentException If $path is missing
      */
-    public function __construct($path = null, $verbose = false, $debug = false)
+    public function __construct($path = null, array $options = [])
     {
         if (!$path) {
             throw new \InvalidArgumentException('Missing required path value.');
         }
 
+        $defaults = [
+            'verbose' => false,
+            'debug' => false,
+        ];
+        $options = array_merge($defaults, $options);
+
         $this->validatePath($path);
 
         $this->path = $path;
-        $this->verbose = $verbose;
-        $this->debug = $debug;
+        $this->options = $options;
 
         $this->config = $this->getConfig();
         $this->provider = $this->prepareProvider($this->getProvider($this->config, 'S3'));
