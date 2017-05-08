@@ -85,8 +85,14 @@ pawsback help:
   -p    The full path to the backup config file
   -v    Verbose output, can be used with dry run
   -d    Dry run, display what would happen without action
+  -g    Generate mode, display a list of commands without validating anything
   -h    This help message
 ```
+
+**NOTES:**
+
+* The `-d` option for dry run **will check and create a bucket** if it doesn't exist as it's using the aws cli tool's dry run mode. To just see the commands that will run without checking/creating a bucket or verifying backup paths, use the `-g` mode to generate a list of commands.
+* All options can be used together.
 
 ## AWS CLI Configuration
 
