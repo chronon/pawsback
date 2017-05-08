@@ -10,8 +10,18 @@
 
 ## Requirements
 
-* PHP - tested with v7.x but should work on v5.6 as well.
+* PHP - developed and tested with v7.0.x but should work on v5.6 as well ([see test build](https://circleci.com/gh/chronon/pawsback/44) with PHP v5.6.22 and PHPUnit v5.7.19). To install with PHP 5.6 change the `require` version in `composer.json`, and optionally set the PHPUnit version to `^5.0` to run tests.
 * The [aws cli tool](https://aws.amazon.com/cli/), which requires Python. The [bundled installer](http://docs.aws.amazon.com/cli/latest/userguide/awscli-install-bundle.html) is very simple to install.
+
+## Installation
+
+To install globally into `~/.composer/vendor/bin`:
+
+```
+composer global require chronon/pawsback
+```
+
+You can then symlink `~/.composer/vendor/bin` to an existing directory in your `PATH` (such as `~/bin`) or add the directory to your `PATH`.
 
 ## Configuration
 
