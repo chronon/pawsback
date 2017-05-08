@@ -160,6 +160,34 @@ class BackupTest extends TestCase
     }
 
     /**
+     * testRunGenerateMode
+     *
+     * @return void
+     */
+    public function testRunGenerateMode()
+    {
+        $backup = $this->getMockBuilder('\Pawsback\Cli\Backup')
+            ->setConstructorArgs([
+                $this->path . 'test.json',
+                ['generate' => true],
+            ])
+            ->setMethods(['shellExec', 'checkAndCreateBucket'])
+            ->getMock();
+
+        $backup->expects($this->never())
+            ->method('checkAndCreateBucket');
+
+        $this->assertEmpty($backup->output);
+
+        $backup->run();
+
+        $this->assertNotEmpty($backup->output);
+        $this->assertContains('chronon-pawsback-test-1', $backup->output);
+        $this->assertContains('foo.com/shared/img', $backup->output);
+        $this->assertNotContains('No files in need of sync.', $backup->output);
+    }
+
+    /**
      * testCliNotExists
      *
      * @return void
