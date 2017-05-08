@@ -9,7 +9,13 @@
             "email": "gregory@chronon.com"
         }
     ],
+    "support": {
+        "issues": "https://github.com/chronon/pawsback/issues",
+        "source": "https://github.com/chronon/pawsback"
+    },
     "require": {
+        "php": ">=7.0.0",
+        "ext-curl": "*",
         "aws/aws-sdk-php": "^3.25"
     },
     "require-dev": {
