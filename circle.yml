@@ -17,3 +17,4 @@ test:
   post:
     - mkdir $CIRCLE_ARTIFACTS/coverage
     - cp -a tmp/coverage/html/ $CIRCLE_ARTIFACTS/coverage/
+    - bash <(curl -s https://codecov.io/bash)
